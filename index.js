@@ -13,7 +13,12 @@ const app = express()
 app.use(express.json())
 app.use(morgan('combined'))
 app.use(helmet())
-app.use(cors())
+app.use(cors({
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}))
 
 app.post('/track', async (req, res) => {
   const trackId = req.body.track
