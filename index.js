@@ -6,8 +6,6 @@ import helmet from 'helmet'
 import cors from 'cors'
 import 'dotenv/config'
 
-const api = new YoutubeMusicApi()
-
 const app = express()
 
 app.use(express.json())
@@ -15,9 +13,7 @@ app.use(morgan('combined'))
 app.use(helmet())
 app.use(cors({
   origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
 }))
 
 app.post('/track', async (req, res) => {
@@ -35,31 +31,34 @@ app.post('/track', async (req, res) => {
 
 app.post('/search', (req, res) => {
   const query = req.body.query
+  console.log(query)
+  const api = new YoutubeMusicApi()
 
-  api.initalize()
-    .then(_info => {
-      api.search(query, 'song').then((data) => {
-        return res.json(data.content.map((item) => {
-          const thumbnail = item.thumbnails.length > 1 ? item.thumbnails.pop().url : null
+  try {
+    api.initalize()
+      .then(_info => {
+        api.search(query, 'song').then((data) => {
+          return res.json(data.content.map((item) => {
+            const thumbnail = item.thumbnails.length > 1 ? item.thumbnails.pop().url : null
 
-          return {
-            url: 'https://www.youtube.com/watch?v=' + item.videoId,
-            title: item.name,
-            artist: item.artist.name,
-            banner: thumbnail,
-            duration: item.duration / 1000
+            return {
+              url: 'https://www.youtube.com/watch?v=' + item.videoId,
+              title: item.name,
+              artist: item.artist.name,
+              banner: thumbnail,
+              duration: item.duration / 1000
+            }
           }
-        }
-        ))
+          ))
+        })
       })
-    })
-    .catch(err => {
-      console.log(err)
-      return res.status(500).json({ error: err })
-    })
+  } catch (error) {
+    return res.status(500).json({ error })
+  }
 })
 
 app.post('/playlist', (req, res) => {
+  const api = new YoutubeMusicApi()
   const playlistId = req.body.playlist
 
   api.initalize()
