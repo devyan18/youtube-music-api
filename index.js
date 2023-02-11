@@ -13,7 +13,9 @@ app.use(morgan('combined'))
 app.use(helmet())
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }))
 
 app.post('/track', async (req, res) => {
