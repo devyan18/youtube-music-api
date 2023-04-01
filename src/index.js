@@ -1,6 +1,6 @@
 import express from 'express'
 import YoutubeMusicApi from 'youtube-music-api'
-import { getDataFromYoutubeMusicVideoId } from './track.service.js'
+import { getDataFromYoutubeMusicVideoId } from './services/track.service.js'
 import morgan from 'morgan'
 import helmet from 'helmet'
 import cors from 'cors'
