@@ -13,7 +13,7 @@ app.use(morgan('combined'))
 app.use(helmet())
 app.use(cors())
 
-app.use((req, res, next) => {
+app.use((_req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
 
   next()
